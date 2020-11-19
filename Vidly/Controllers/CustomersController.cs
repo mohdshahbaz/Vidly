@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Runtime.Caching;
 using System.Web;
 using System.Web.Mvc;
 using Vidly.Models;
@@ -27,6 +28,17 @@ namespace Vidly.Controllers
         // GET: Customers
         public ActionResult Index()
         {
+
+
+            // MembershipType Data caching. 
+
+            //if (MemoryCache.Default["MembershipType"] == null)
+            //{
+            //    MemoryCache.Default["MembershipType"] = _context.MembershipTypes.ToList();
+            //}
+
+            //var membershipType = MemoryCache.Default["MembershipType"] as IEnumerable<MembershipType>;
+
             return View();
         }
 

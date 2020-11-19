@@ -12,6 +12,7 @@ using Vidly.ViewModels;
 
 namespace Vidly.Controllers
 {
+    [Authorize(Roles = RoleName.CanManageMovies)]
     public class MoviesController : Controller
     {
         // GET: Movies/Random
@@ -28,53 +29,53 @@ namespace Vidly.Controllers
             _context.Dispose();    
         }
 
-        public ActionResult Random()
-        {
-            var movie = new Movie() { Name = "Shrek!" };
+        //public ActionResult Random()
+        //{
+        //    var movie = new Movie() { Name = "Shrek!" };
 
-            var customers = new List<Customer>()
-            {
-                new Customer() { Name = "Customer 1"},
-                new Customer() { Name = "Customer 2"}
+        //    var customers = new List<Customer>()
+        //    {
+        //        new Customer() { Name = "Customer 1"},
+        //        new Customer() { Name = "Customer 2"}
 
-            };
+        //    };
 
-            var viewModel = new RandomMovieViewModel()
-            {
-                Movie = movie,
-                Customers = customers
-            };
-
-
-            return View(viewModel);
-            // return HttpNotFound();
-            // return Content("Hello World!");
-            // return new EmptyResult();
-            //return RedirectToAction("Index", "Home", new { page = 1, sortBy = "name" } );
-        }
-
-        public ActionResult Released(int? pageIndex, string sortBy)
-        {
-            if (!pageIndex.HasValue)
-            {
-                pageIndex = 1;
-            }
-
-            if (string.IsNullOrWhiteSpace(sortBy))
-            {
-                sortBy = "Name";
-            }
-
-            return Content(string.Format("pageIndex={0}&sortBy={1}", pageIndex, sortBy));
-        }
+        //    var viewModel = new RandomMovieViewModel()
+        //    {
+        //        Movie = movie,
+        //        Customers = customers
+        //    };
 
 
-        [Route("movies/released/{year}/{month:regex(\\d{2}):range(1,12)}")]
-        public ActionResult ByReleaseDate(int year, int month)
-        {
+        //    return View(viewModel);
+        //    // return HttpNotFound();
+        //    // return Content("Hello World!");
+        //    // return new EmptyResult();
+        //    //return RedirectToAction("Index", "Home", new { page = 1, sortBy = "name" } );
+        //}
 
-            return Content(year + "/" + month);
-        }
+        //public ActionResult Released(int? pageIndex, string sortBy)
+        //{
+        //    if (!pageIndex.HasValue)
+        //    {
+        //        pageIndex = 1;
+        //    }
+
+        //    if (string.IsNullOrWhiteSpace(sortBy))
+        //    {
+        //        sortBy = "Name";
+        //    }
+
+        //    return Content(string.Format("pageIndex={0}&sortBy={1}", pageIndex, sortBy));
+        //}
+
+
+        //[Route("movies/released/{year}/{month:regex(\\d{2}):range(1,12)}")]
+        //public ActionResult ByReleaseDate(int year, int month)
+        //{
+
+        //    return Content(year + "/" + month);
+        //}
 
 
         //[Route("Customers")]
@@ -120,15 +121,15 @@ namespace Vidly.Controllers
         //    return View(movies);
         //}
 
-
-
+        [OverrideAuthorization]
+        [Authorize]
         public ActionResult Index()
         {
-            var movies = _context.Movies.Include(g => g.Genre).ToList();
+            if (User.IsInRole(RoleName.CanManageMovies))
+                return View("List");
 
-            return View(movies);
+            return View("ReadOnlyList");
         }
-
 
         public ActionResult Edit(int id)
         {
@@ -148,8 +149,7 @@ namespace Vidly.Controllers
 
             return View("MovieForm", viewModel);
         }
-
-
+        
         public ActionResult New()
         {
             var genres = _context.Genres.ToList();

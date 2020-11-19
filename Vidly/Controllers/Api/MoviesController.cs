@@ -10,7 +10,9 @@ using Vidly.Dtos;
 using Vidly.Models;
 
 namespace Vidly.Controllers.Api
+    
 {
+    [Authorize(Roles = RoleName.CanManageMovies)]
     public class MoviesController : ApiController
     {
         private ApplicationDbContext _context;
@@ -21,14 +23,28 @@ namespace Vidly.Controllers.Api
         }
 
         // Get /api/movies
+        [OverrideAuthorization]
+        [Authorize]
         public IHttpActionResult GetMovies()
         {
-            var moviesDto = _context.Movies
+            if(User.IsInRole(RoleName.CanManageMovies)) {
+                var moviesDto = _context.Movies
                 .Include(g => g.Genre)
                 .ToList()
                 .Select(Mapper.Map<Movie, MovieDto>);
-            return Ok(moviesDto);
+
+
+                return Ok(moviesDto);
+            }
+
+            var readOnlyList = _context.Movies
+                .Include(g => g.Genre)
+                .Select(c => new { c.Id, c.Name, c.Genre })
+                .ToList();
+
+            return Ok(readOnlyList);
         }
+
 
         // Get /api/movies/1
         public IHttpActionResult GetMovie(int id)

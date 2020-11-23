@@ -1,4 +1,4 @@
-# Introduction 
+# Vidly! 
 In this project I'm going through an Udemy course on Asp.net MVC 5. 
 Through this course I'm learning to code a WebApp. 
 This WebApp implements the rental process of a movie store.

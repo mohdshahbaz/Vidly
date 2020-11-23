@@ -1,5 +1,7 @@
 # Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+In this project I'm going through an Udemy course on Asp.net MVC 5. 
+Through this course I'm learning to code a WebApp. 
+This WebApp implements the rental process of a movie store.
 
 # Getting Started
 TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
